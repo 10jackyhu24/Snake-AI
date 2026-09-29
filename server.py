@@ -27,7 +27,7 @@ class GameController:
         self.mode = "heuristic"
         self.ai = self.agents[self.mode]
         self.running = False
-        self.moves_per_second = 5.0
+        self.moves_per_second = 20.0
         self.lock = threading.RLock()
         self.decision = self.ai.choose(self.game)
         self._stop_event = threading.Event()
@@ -81,7 +81,7 @@ class GameController:
                 self.game.reset()
                 self.decision = self.ai.choose(self.game)
             elif action == "speed" and value is not None:
-                self.moves_per_second = max(1.0, min(20.0, float(value)))
+                self.moves_per_second = max(1.0, min(100.0, float(value)))
             elif action == "mode" and isinstance(value, str) and value in self.agents:
                 self.running = False
                 self.mode = value
