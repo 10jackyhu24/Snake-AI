@@ -1,0 +1,4 @@
+# The web demo itself uses only Python's standard library.
+# These packages are needed only to train or run DQN/PPO checkpoints.
+numpy>=1.24
+torch>=2.0

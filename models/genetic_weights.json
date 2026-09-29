@@ -1,0 +1,18 @@
+{
+  "algorithm": "genetic",
+  "generation": 5,
+  "fitness": 5290.775,
+  "weights": {
+    "eat_food": 1954.0184,
+    "food_path_base": 402.7824,
+    "food_path_step": -11.3177,
+    "food_unreachable": -522.8589,
+    "space_per_cell": 5.0298,
+    "tail_reachable": 260,
+    "tail_blocked": -162.8224,
+    "exit_per_direction": 41.9947,
+    "keep_direction": 16.7289,
+    "trap": -3961.0437,
+    "collision": -100000
+  }
+}

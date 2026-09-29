@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Snake AI Lab — 可解釋的貪食蛇 AI</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">PYTHON · AI VISUAL LAB</p>
+        <h1>Snake <span>AI Lab</span></h1>
+      </div>
+      <div class="live-status"><i id="statusDot"></i><span id="statusText">等待中</span></div>
+    </header>
+
+    <section class="dashboard">
+      <div class="game-column">
+        <div class="stat-row">
+          <article class="stat"><span>食物</span><strong id="score">0</strong></article>
+          <article class="stat"><span>蛇身長度</span><strong id="length">3</strong></article>
+          <article class="stat"><span>已走步數</span><strong id="steps">0</strong></article>
+          <article class="stat accent"><span>下一步</span><strong id="nextMove">→</strong></article>
+        </div>
+
+        <div class="board-frame">
+          <div class="board-label"><span>LIVE SIMULATION</span><span>20 × 16 GRID</span></div>
+          <canvas id="gameCanvas" aria-label="貪食蛇遊戲棋盤"></canvas>
+          <div id="gameMessage" class="game-message hidden"></div>
+        </div>
+
+        <div class="controls">
+          <button id="playButton" class="primary"><span id="playIcon">▶</span><span id="playLabel">開始</span></button>
+          <button id="stepButton">單步執行</button>
+          <button id="resetButton">重新開始</button>
+          <label class="mode-control">
+            <span>AI 模式</span>
+            <select id="modeSelect" aria-label="選擇 AI 模式"></select>
+          </label>
+          <label class="speed-control">
+            <span>速度 <strong id="speedValue">5</strong> 步/秒</span>
+            <input id="speedInput" type="range" min="1" max="20" value="5">
+          </label>
+        </div>
+      </div>
+
+      <aside class="inspector">
+        <div class="panel-title">
+          <div><p class="eyebrow">DECISION INSPECTOR</p><h2>AI 決策透視</h2></div>
+          <span class="brain-icon">◎</span>
+        </div>
+
+        <section class="strategy-card">
+          <div class="strategy-head">
+            <span id="strategyCategory">搜尋 / 人工規則</span>
+            <b id="strategyStatus">不需訓練</b>
+          </div>
+          <p id="strategyDescription">正在讀取策略資料…</p>
+        </section>
+
+        <section class="decision-card">
+          <span class="section-label">本回合選擇</span>
+          <div class="chosen-line"><strong id="chosenDirection">RIGHT</strong><span id="chosenScore">0 分</span></div>
+          <p id="decisionReason">正在讀取 AI 狀態…</p>
+        </section>
+
+        <section>
+          <div class="section-heading"><span class="section-label">四方向候選評分</span><span id="scoreHint">分數越高越好</span></div>
+          <div id="candidateList" class="candidate-list"></div>
+        </section>
+
+        <section class="flow-section">
+          <span class="section-label">這個模式如何思考？</span>
+          <ol id="logicFlow" class="logic-flow"></ol>
+        </section>
+      </aside>
+    </section>
+
+    <footer>
+      <span><i class="legend snake"></i>蛇身</span>
+      <span><i class="legend food"></i>食物</span>
+      <span><i class="legend choice"></i>AI 選擇</span>
+      <span class="tip">提示：先按「單步執行」，逐回合觀察右側評分變化。</span>
+    </footer>
+  </main>
+  <script src="/app.js"></script>
+</body>
+</html>
