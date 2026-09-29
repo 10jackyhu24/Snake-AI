@@ -37,6 +37,9 @@ const modeFlows = {
 let latestState = null;
 let requestInFlight = false;
 let expandedDirection = null;
+let speedEditing = false;
+let speedSyncTimer = null;
+let speedRequestVersion = 0;
 
 async function getState() {
   if (requestInFlight) return;
@@ -79,8 +82,12 @@ function render(state) {
   document.querySelector("#playLabel").textContent = state.running ? "暫停" : "開始";
   document.querySelector("#stepButton").disabled = state.running || state.gameOver;
   document.querySelector("#playButton").disabled = state.gameOver;
-  document.querySelector("#speedValue").textContent = Math.round(state.speed);
-  document.querySelector("#speedInput").value = state.speed;
+  // Polling must not replace the local slider value while the user is
+  // dragging. The final server value is rendered after synchronization.
+  if (!speedEditing) {
+    document.querySelector("#speedValue").textContent = Math.round(state.speed);
+    document.querySelector("#speedInput").value = state.speed;
+  }
   renderMode(state);
 
   const message = document.querySelector("#gameMessage");
@@ -242,10 +249,28 @@ document.querySelector("#stepButton").addEventListener("click", () => control("s
 document.querySelector("#resetButton").addEventListener("click", () => control("reset"));
 document.querySelector("#speedInput").addEventListener("input", event => {
   document.querySelector("#speedValue").textContent = event.target.value;
+  queueSpeedUpdate(Number(event.target.value));
 });
-document.querySelector("#speedInput").addEventListener("change", event => control("speed", Number(event.target.value)));
+document.querySelector("#speedInput").addEventListener("change", event => queueSpeedUpdate(Number(event.target.value), true));
 document.querySelector("#modeSelect").addEventListener("change", event => control("mode", event.target.value));
 window.addEventListener("resize", () => latestState && drawBoard(latestState));
+
+function queueSpeedUpdate(value, immediately = false) {
+  speedEditing = true;
+  const version = ++speedRequestVersion;
+  clearTimeout(speedSyncTimer);
+  speedSyncTimer = setTimeout(async () => {
+    try {
+      await control("speed", value);
+    } finally {
+      // Ignore an older response if the slider moved again while it was sent.
+      if (version === speedRequestVersion) {
+        speedEditing = false;
+        if (latestState) render(latestState);
+      }
+    }
+  }, immediately ? 0 : 80);
+}
 
 getState();
 setInterval(getState, 120);
